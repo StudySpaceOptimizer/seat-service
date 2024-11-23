@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+use App\Http\Controllers\SeatController;
+
+Route::get("/seats", [SeatController::class, "getSeatsStatus"]);
+Route::get('/seats/{seatId}', [SeatController::class, 'getSeatStatus']);
+Route::put('/seats/{seatId}', [SeatController::class, 'updateSeat']);
