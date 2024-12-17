@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeatController;
 
 Route::get("/seats", [SeatController::class, "getSeatsStatus"]);
-Route::get('/seats/{seatId}', [SeatController::class, 'getSeatStatus']);
-Route::put('/seats/{seatId}', [SeatController::class, 'updateSeat']);
+Route::get('/seats/{seatCode}', [SeatController::class, 'getSeatStatus']);
+Route::put('/seats/{seatCode}', [SeatController::class, 'updateSeat']);

@@ -89,16 +89,16 @@ class SeatController extends Controller
         return response()->json(array_values($seatData));
     }
 
-    public function getSeatStatus($seatId)
+    public function getSeatStatus($seatCode)
     {
         // 檢查座位是否存在
-        $seat = DB::table('seats')->where('id', $seatId)->first();
+        $seat = DB::table('seats')->where('code', $seatCode)->first();
         if (!$seat) {
             return response()->json(['error' => 'Seat not found'], 404);
         }
 
         // 獲取該座位的所有預約
-        $reservations = $this->reservationRepository->getReservationsBySeatId($seatId);
+        $reservations = $this->reservationRepository->getReservationsBySeatId($seat->id);
 
         // 整理預約時間段
         $timeSlots = $reservations->map(function ($reservation) {

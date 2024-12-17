@@ -13,7 +13,7 @@ class SeatFactory extends Factory
     {
         return [
             'type' => $this->faker->randomElement(['normal', 'notebook']),
-            'available' => $this->faker->boolean,
+            'available' => true,
         ];
     }
 }

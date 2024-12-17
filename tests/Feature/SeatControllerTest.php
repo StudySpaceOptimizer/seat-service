@@ -151,7 +151,7 @@ class SeatControllerTest extends TestCase
     public function testGetSeatStatusWithReservations()
     {
         // 發送請求
-        $response = $this->getJson('/api/seats/1');
+        $response = $this->getJson('/api/seats/A01');
 
         // 驗證響應
         $response->assertStatus(200)
@@ -166,7 +166,7 @@ class SeatControllerTest extends TestCase
     public function testGetSeatStatusWithNoReservations()
     {
         // 發送請求
-        $response = $this->getJson('/api/seats/3');
+        $response = $this->getJson('/api/seats/B01');
 
         // 驗證響應
         $response->assertStatus(200)
