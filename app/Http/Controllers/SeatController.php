@@ -38,7 +38,6 @@ class SeatController extends Controller
         if (!$beginTime || !$endTime) {
             $beginTime = $now->copy()->setTimeFromTimeString($openingHours['beginTime']);
             $endTime = $now->copy()->setTimeFromTimeString($openingHours['endTime']);
-            // dd($now);
 
             if ($now->greaterThanOrEqualTo($endTime)) {
                 return response()->json(['status' => 'unavailable'], 422);
@@ -51,30 +50,33 @@ class SeatController extends Controller
 
         $seatData = [];
         foreach ($seats as $seat) {
-            $seatData[$seat->id] = [
+            $seatData[$seat->code] = [
                 'seatCode' => $seat->code,
                 'status' => $seat->available ? 'available' : 'unavailable',
             ];
         }
 
-        $firstSeatId = $seats->first()->id;
         $reservations = $this->reservationRepository->getReservationsBetween($beginTime, $endTime);
 
         $seatCoverages = [];
         foreach ($reservations as $reservation) {
             // TODO: use correctly connect seat_id and reservation.seat_id
-            $seatId = $reservation->seat_id + $firstSeatId - 1;
-            if (!isset($seatCoverages[$seatId])) {
-                $seatCoverages[$seatId] = [];
+            $seatCode = $reservation->seat_code;
+            if (!isset($seatCoverages[$seatCode])) {
+                $seatCoverages[$seatCode] = [];
             }
-            $seatCoverages[$seatId][] = [
+            $seatCoverages[$seatCode][] = [
                 'start' => Carbon::parse($reservation->begin_time),
                 'end' => Carbon::parse($reservation->end_time),
             ];
         }
 
-        foreach ($seatCoverages as $seatId => $coverages) {
+        foreach ($seatCoverages as $seatCode => $coverages) {
             $currentEnd = $beginTime;
+            if ($seatData[$seatCode]['status'] === 'unavailable') {
+                continue;
+            }
+
             foreach ($coverages as $timeRange) {
                 if ($timeRange['start']->equalTo($currentEnd)) {
                     $currentEnd = $timeRange['end'];
@@ -82,9 +84,9 @@ class SeatController extends Controller
             }
 
             if ($currentEnd->greaterThanOrEqualTo($endTime)) {
-                $seatData[$seatId]['status'] = 'reserved';
+                $seatData[$seatCode]['status'] = 'reserved';
             } else {
-                $seatData[$seatId]['status'] = 'partiallyReserved';
+                $seatData[$seatCode]['status'] = 'partiallyReserved';
             }
         }
 

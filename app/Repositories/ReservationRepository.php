@@ -19,15 +19,15 @@ class ReservationRepository
         return DB::table('reservations')
             ->where('begin_time', '>=', $beginTime->toDateTimeString())
             ->where('end_time', '<=', $endTime->toDateTimeString())
-            ->orderBy('seat_id')
+            ->orderBy('seat_code')
             ->orderBy('begin_time')
             ->get();
     }
 
-    public function getReservationsBySeatId(int $seatId)
+    public function getReservationsBySeatId(int $seatCode)
     {
         return DB::table('reservations')
-            ->where('seat_id', $seatId)
+            ->where('seat_code', $seatCode)
             ->orderBy('begin_time', 'asc')
             ->get(['begin_time', 'end_time']);
     }

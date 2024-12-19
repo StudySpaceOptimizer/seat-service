@@ -47,14 +47,14 @@ class SeatControllerTest extends TestCase
         $mockedReservations = collect([
             (object) [
                 'id' => 1,
-                'seat_id' => 1,
+                'seat_code' => 'A01',
                 'begin_time' => '2024-11-25 09:00:00',
                 'end_time' => '2024-11-25 10:00:00',
                 'user_email' => 'user1@example.com',
             ],
             (object) [
                 'id' => 2,
-                'seat_id' => 2,
+                'seat_code' => 'A02',
                 'begin_time' => '2024-11-25 10:30:00',
                 'end_time' => '2024-11-25 11:30:00',
                 'user_email' => 'user2@example.com',
@@ -64,7 +64,7 @@ class SeatControllerTest extends TestCase
         $mockedSeat1Reservations = collect([
             (object) [
                 'id' => 1,
-                'seat_id' => 1,
+                'seat_code' => 'B01',
                 'begin_time' => '2024-11-25 09:00:00',
                 'end_time' => '2024-11-25 10:00:00',
                 'user_email' => 'user1@example.com',
