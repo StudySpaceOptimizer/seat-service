@@ -57,11 +57,13 @@ class SeatController extends Controller
             ];
         }
 
+        $firstSeatId = $seats->first()->id;
         $reservations = $this->reservationRepository->getReservationsBetween($beginTime, $endTime);
 
         $seatCoverages = [];
         foreach ($reservations as $reservation) {
-            $seatId = $reservation->seat_id;
+            // TODO: use correctly connect seat_id and reservation.seat_id
+            $seatId = $reservation->seat_id + $firstSeatId - 1;
             if (!isset($seatCoverages[$seatId])) {
                 $seatCoverages[$seatId] = [];
             }
@@ -97,8 +99,10 @@ class SeatController extends Controller
             return response()->json(['error' => 'Seat not found'], 404);
         }
 
+        $firstSeatId = DB::table('seats')->orderBy('id')->first()->id;
+
         // 獲取該座位的所有預約
-        $reservations = $this->reservationRepository->getReservationsBySeatId($seat->id);
+        $reservations = $this->reservationRepository->getReservationsBySeatId($seat->id - $firstSeatId + 1);
 
         // 整理預約時間段
         $timeSlots = $reservations->map(function ($reservation) {
